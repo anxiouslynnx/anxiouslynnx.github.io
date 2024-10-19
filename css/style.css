@@ -1,3 +1,7 @@
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   font-family: "Poppins", sans-serif;
   color: #040000;
@@ -1060,8 +1064,8 @@ video {
 
 .video-thumbnails {
   display: flex;
-  flex-direction: column; /* Stack the video thumbnails vertically */
-  align-items: center; /* Center them horizontally */
+  flex-direction: column; 
+  align-items: center; 
   gap: 10px;
 }
 
