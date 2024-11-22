@@ -28,6 +28,9 @@
   <link href="css/style.css" rel="stylesheet" />
   <!-- responsive style -->
   <link href="css/responsive.css" rel="stylesheet" />
+  <!-- Bootstrap CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
 </head>
 
 <body>
@@ -80,32 +83,210 @@
             </button>
 
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
-              <div class="d-flex  flex-column flex-lg-row align-items-center">
-                <ul class="navbar-nav  ">
+              <div class="d-flex flex-column flex-lg-row align-items-center">
+                <ul class="navbar-nav">
                   <li class="nav-item active">
                     <a class="nav-link" href="index.html">Home <span class="sr-only">(current)</span></a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link" href="#About">About </a>
+                    <a class="nav-link" href="#About">About</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link" href="#Services">Services </a>
+                    <a class="nav-link" href="#Services">Services</a>
                   </li>
                   <li class="nav-item">
                     <a class="nav-link" href="#Contact">Contact Us</a>
                   </li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="#">Login</a>
+                  
+                  <!-- Login link (shown when the user is not logged in) -->
+                  <li class="nav-item" id="loginLink">
+                    <a class="nav-link" href="#loginModal" data-bs-toggle="modal" data-bs-target="#loginModal">Login</a>
+                  </li>
+            
+                  <!-- Username link (shown when the user is logged in) -->
+                  <li class="nav-item" id="usernameLink" style="display:none;">
+                    <a class="nav-link" href="#">Welcome, <span id="usernameText"></span></a>
+                  </li>
+            
+                  <!-- Logout link (shown when the user is logged in) -->
+                  <li class="nav-item" id="logoutLink" style="display:none;">
+                    <a class="nav-link" href="#" id="logoutButton">Logout</a>
                   </li>
                 </ul>
+            
                 <form class="form-inline my-2 my-lg-0 ml-0 ml-lg-4 mb-3 mb-lg-0">
-                  <button class="btn  my-2 my-sm-0 nav_search-btn" type="submit"></button>
+                  <button class="btn my-2 my-sm-0 nav_search-btn" type="submit"></button>
                 </form>
               </div>
             </div>
-          </nav>
+            
+            <!-- Add the Logout Button script -->
+            <script>
+              document.addEventListener('DOMContentLoaded', function() {
+                updateNavbar(); // Update the navbar when the page is loaded
+              });
+            
+              // Function to update the navbar based on login status
+              function updateNavbar() {
+                const username = localStorage.getItem('username'); // Get the username from localStorage
+            
+                const loginLink = document.getElementById('loginLink');
+                const usernameLink = document.getElementById('usernameLink');
+                const logoutLink = document.getElementById('logoutLink');
+                
+                if (username) {
+                  // Show the username and logout options
+                  loginLink.style.display = 'none';  // Hide login link
+                  usernameLink.style.display = 'block';  // Show username link
+                  logoutLink.style.display = 'block';  // Show logout link
+            
+                  // Set the username text
+                  document.getElementById('usernameText').textContent = username;
+                } else {
+                  // Show login link if no user is logged in
+                  loginLink.style.display = 'block';
+                  usernameLink.style.display = 'none';
+                  logoutLink.style.display = 'none';
+                }
+              }
+            
+              // Logout logic
+              document.getElementById('logoutButton')?.addEventListener('click', function() {
+                // Clear the username from localStorage and update the navbar
+                localStorage.removeItem('username');
+                updateNavbar();  // Update navbar to reflect logged-out state
+              });
+            </script>
+            
+<!-- Modal Login -->
+<div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title" id="loginModalLabel">Login / Register</h5>
+        <button type="button" class="btn-close text-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <!-- Nav Tabs -->
+        <ul class="nav nav-tabs mb-3" id="loginTab" role="tablist">
+          <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="login-tab" data-bs-toggle="tab" data-bs-target="#login" type="button" role="tab" aria-controls="login" aria-selected="true">
+              Login
+            </button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="register-tab" data-bs-toggle="tab" data-bs-target="#register" type="button" role="tab" aria-controls="register" aria-selected="false">
+              Register
+            </button>
+          </li>
+        </ul>
+        <!-- Tab Content -->
+        <div class="tab-content" id="loginTabContent">
+          <!-- Login Tab -->
+          <div class="tab-pane fade show active" id="login" role="tabpanel" aria-labelledby="login-tab">
+            <form id="loginForm">
+              <div class="mb-3">
+                <label for="loginEmail" class="form-label">Email address</label>
+                <input type="email" class="form-control" id="loginEmail" placeholder="Enter your email">
+              </div>
+              <div class="mb-3">
+                <label for="loginPassword" class="form-label">Password</label>
+                <input type="password" class="form-control" id="loginPassword" placeholder="Enter your password">
+              </div>
+              <button type="submit" class="btn btn-primary w-100">Login</button>
+            </form>
+          </div>
+          <!-- Register Tab -->
+          <div class="tab-pane fade" id="register" role="tabpanel" aria-labelledby="register-tab">
+            <form id="registerForm">
+              <div class="mb-3">
+                <label for="registerEmail" class="form-label">Email address</label>
+                <input type="email" class="form-control" id="registerEmail" placeholder="Enter your email">
+              </div>
+              <div class="mb-3">
+                <label for="registerUsername" class="form-label">Username</label>
+                <input type="text" class="form-control" id="registerUsername" placeholder="Choose a username">
+              </div>
+              <div class="mb-3">
+                <label for="registerPassword" class="form-label">Password</label>
+                <input type="password" class="form-control" id="registerPassword" placeholder="Create a password">
+              </div>
+              <button type="submit" class="btn btn-primary w-100">Register</button>
+            </form>
+          </div>
         </div>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- JavaScript for Login/Register Integration -->
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    // Handle Login Form Submission
+    const loginForm = document.getElementById('loginForm');
+    loginForm.addEventListener('submit', async (e) => {
+      e.preventDefault(); // Prevent form submission
+
+      const email = document.getElementById('loginEmail').value;
+      const password = document.getElementById('loginPassword').value;
+
+      try {
+        const response = await fetch('/api/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password }),
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          alert('Login successful!');
+          // Redirect or update UI
+          window.location.href = '/dashboard';
+        } else {
+          alert(`Login failed: ${data.error}`);
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('An error occurred while logging in.');
+      }
+    });
+
+    // Handle Register Form Submission
+    const registerForm = document.getElementById('registerForm');
+    registerForm.addEventListener('submit', async (e) => {
+      e.preventDefault(); // Prevent form submission
+
+      const email = document.getElementById('registerEmail').value;
+      const username = document.getElementById('registerUsername').value;
+      const password = document.getElementById('registerPassword').value;
+
+      try {
+        const response = await fetch('/api/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, username, password }),
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          alert('Registration successful!');
+          // Redirect or update UI
+          window.location.href = '/welcome';
+        } else {
+          alert(`Registration failed: ${data.error}`);
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('An error occurred while registering.');
+      }
+    });
+  });
+</script>
+
+ 
       <div class="slider_container">
         <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
           <ol class="carousel-indicators">
@@ -1110,9 +1291,13 @@
     </p>
   </section>
   <!-- footer section -->
-
+  <script src="frontend.js"></script>
   <script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
   <script type="text/javascript" src="js/bootstrap.js"></script>
+  <!-- Bootstrap Bundle JS (includes Popper.js) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="frontend.js"></script>
+</body>
 
   <script>
     function openNav() {

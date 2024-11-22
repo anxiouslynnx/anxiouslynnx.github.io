@@ -4436,3 +4436,106 @@ function getURL() { window.location.href; } var protocol = location.protocol; $.
 
 }));
 //# sourceMappingURL=bootstrap.js.map
+
+document.getElementById('registerForm').addEventListener('submit', function(event) {
+  event.preventDefault(); // Prevent the form from submitting the usual way
+
+  // Get the input values
+  const email = document.getElementById('registerEmail').value;
+  const username = document.getElementById('registerUsername').value;
+  const password = document.getElementById('registerPassword').value;
+
+  // Send data to the backend using fetch
+  fetch('http://localhost:3000/register', {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json' // We are sending JSON data
+      },
+      body: JSON.stringify({
+          email: email,
+          username: username,
+          password: password
+      })
+  })
+  .then(response => response.json()) // Parse the JSON response from the server
+  .then(data => {
+      console.log(data);
+
+      // Check if the server responded with a userId (successful registration)
+      if (data.userId) {
+          alert('User registered successfully!');
+      } else {
+          alert('Error: ' + data.error); // Show error if the userId is not in the response
+      }
+  })
+  .catch(err => {
+      console.error('Error during registration:', err);
+      alert('An error occurred during registration. Please try again later.'); // Show generic error alert if fetch fails
+  });
+});
+
+
+//update narvar and store username
+document.addEventListener('DOMContentLoaded', function() {
+  // Handle form submission for login
+  const loginForm = document.getElementById('loginForm');
+  if (loginForm) {
+    loginForm.addEventListener('submit', function(event) {
+      event.preventDefault(); // Prevent form from submitting normally
+
+      const email = document.getElementById('loginEmail').value;
+      const password = document.getElementById('loginPassword').value;
+
+      // Send login data to the server
+      fetch('/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.error) {
+          alert(data.error);
+        } else {
+          alert(data.message);
+          // Save username to localStorage for navbar update
+          localStorage.setItem('username', data.username);
+          updateNavbar(); // Update the navbar
+        }
+      })
+      .catch((err) => {
+        alert('An error occurred while logging in');
+      });
+    });
+  }
+
+  // Function to update the navbar based on login status
+  function updateNavbar() {
+    const username = localStorage.getItem('username');
+    const loginLink = document.getElementById('loginLink');
+    const usernameLink = document.getElementById('usernameLink');
+    const logoutLink = document.getElementById('logoutLink');
+
+    if (username) {
+      loginLink.style.display = 'none';
+      usernameLink.style.display = 'block';
+      logoutLink.style.display = 'block';
+      document.getElementById('usernameText').textContent = username;
+    } else {
+      loginLink.style.display = 'block';
+      usernameLink.style.display = 'none';
+      logoutLink.style.display = 'none';
+    }
+  }
+
+  // Update navbar on page load
+  updateNavbar();
+
+  // Logout logic
+  document.getElementById('logoutButton')?.addEventListener('click', function() {
+    localStorage.removeItem('username');
+    updateNavbar();
+  });
+});
